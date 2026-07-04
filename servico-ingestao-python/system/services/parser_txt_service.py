@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 
-from schemas.produto_schema import ProdutoNormalizado
+from system.schemas.produto_schema import ProdutoNormalizado
 
 
 def converter_valor_txt_para_float(valor: str) -> float:
