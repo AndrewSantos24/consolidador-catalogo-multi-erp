@@ -1,4 +1,4 @@
-from schemas.produto_schema import ProdutoNormalizado
+from system.schemas.produto_schema import ProdutoNormalizado
 
 
 def converter_item_json_para_produto(item: dict) -> ProdutoNormalizado:
