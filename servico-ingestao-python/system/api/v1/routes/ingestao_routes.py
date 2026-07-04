@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 
-from system.services.parser_json_service import normalizar_produtos_json
-from system.services.parser_txt_service import normalizar_produtos_txt
-from system.services.parser_xml_service import normalizar_produtos_xml
+from system.services.servico_ingestao_service import (
+    processar_ingestao_json,
+    processar_ingestao_txt,
+    processar_ingestao_xml,
+)
 
 
 router = APIRouter(prefix="/ingestao", tags=["Ingestão"])
@@ -35,13 +37,7 @@ def receber_produtos_json(payload: dict = Body(...)) -> dict:
     :return: Quantidade e lista de produtos normalizados
     """
 
-    produtos = normalizar_produtos_json(payload)
-
-    return {
-        "mensagem": "Produtos JSON normalizados com sucesso.",
-        "quantidade": len(produtos),
-        "produtos": jsonable_encoder(produtos),
-    }
+    return processar_ingestao_json(payload)
 
 
 @router.post("/xml")
@@ -70,13 +66,7 @@ def receber_produtos_xml(payload_xml: str = Body(..., media_type="application/xm
     :return: Quantidade e lista de produtos normalizados
     """
 
-    produtos = normalizar_produtos_xml(payload_xml)
-
-    return {
-        "mensagem": "Produtos XML normalizados com sucesso.",
-        "quantidade": len(produtos),
-        "produtos": jsonable_encoder(produtos),
-    }
+    return processar_ingestao_xml(payload_xml)
 
 
 @router.post("/txt")
@@ -100,10 +90,4 @@ def receber_produtos_txt(payload_txt: str = Body(..., media_type="text/plain")) 
     :return: Quantidade e lista de produtos normalizados
     """
 
-    produtos = normalizar_produtos_txt(payload_txt)
-
-    return {
-        "mensagem": "Produtos TXT normalizados com sucesso.",
-        "quantidade": len(produtos),
-        "produtos": jsonable_encoder(produtos),
-    }
+    return processar_ingestao_txt(payload_txt)
