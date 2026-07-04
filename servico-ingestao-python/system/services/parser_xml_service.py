@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 
-from schemas.produto_schema import ProdutoNormalizado
+from system.schemas.produto_schema import ProdutoNormalizado
 
 
 def converter_item_xml_para_produto(elemento: ET.Element) -> ProdutoNormalizado:
