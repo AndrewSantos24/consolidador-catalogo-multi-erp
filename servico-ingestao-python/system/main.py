@@ -9,7 +9,7 @@ from system.core.config import configuracoes
 from system.database.inicializador import inicializar_banco
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+async def gerenciar_criacao_tabela(app: FastAPI) -> AsyncGenerator[None, None]:
     """Executa ações ao iniciar e finalizar a aplicação.
 
     :param FastAPI app: Aplicação FastAPI
@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 app = FastAPI(
     title=configuracoes.nome_aplicacao,
     version="0.1.0",
-    lifespan=lifespan
+    lifespan=gerenciar_criacao_tabela
 )
 
 
