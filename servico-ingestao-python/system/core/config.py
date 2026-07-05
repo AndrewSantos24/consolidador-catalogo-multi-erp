@@ -13,6 +13,8 @@ class Configuracoes(BaseSettings):
     rabbitmq_senha: str
     rabbitmq_fila_produtos: str
 
+    database_url: str
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
