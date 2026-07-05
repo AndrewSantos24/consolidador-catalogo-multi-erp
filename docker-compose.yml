@@ -11,5 +11,18 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
+  postgres:
+    image: postgres:16
+    container_name: catalogo_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: catalogo_db
+      POSTGRES_USER: catalogo
+      POSTGRES_PASSWORD: catalogo
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
 volumes:
   rabbitmq_data:
+  postgres_data:
