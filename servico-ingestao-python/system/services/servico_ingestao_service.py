@@ -4,7 +4,7 @@ from system.schemas.produto_schema import ProdutoNormalizado
 from system.services.parser_json_service import normalizar_produtos_json
 from system.services.parser_txt_service import normalizar_produtos_txt
 from system.services.parser_xml_service import normalizar_produtos_xml
-from system.services.rabbitmq_publisher_service import publicar_produtos_normalizados
+from system.services.rabbitmq_publisher_service import publicar_produtos_rbmq
 
 
 
@@ -39,7 +39,7 @@ def processar_ingestao_json(payload: dict) -> dict:
     """
 
     produtos = normalizar_produtos_json(payload)
-    quantidade_publicada = publicar_produtos_normalizados(produtos)
+    quantidade_publicada = publicar_produtos_rbmq(produtos)
 
     return montar_resposta_ingestao(
         produtos=produtos,
@@ -56,7 +56,7 @@ def processar_ingestao_xml(payload_xml: str) -> dict:
     """
 
     produtos = normalizar_produtos_xml(payload_xml)
-    quantidade_publicada = publicar_produtos_normalizados(produtos)
+    quantidade_publicada = publicar_produtos_rbmq(produtos)
 
     return montar_resposta_ingestao(
         produtos=produtos,
@@ -73,7 +73,7 @@ def processar_ingestao_txt(payload_txt: str) -> dict:
     """
 
     produtos = normalizar_produtos_txt(payload_txt)
-    quantidade_publicada = publicar_produtos_normalizados(produtos)
+    quantidade_publicada = publicar_produtos_rbmq(produtos)
 
     return montar_resposta_ingestao(
         produtos=produtos,

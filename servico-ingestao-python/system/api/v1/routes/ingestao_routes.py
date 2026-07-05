@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Body
-from fastapi.encoders import jsonable_encoder
+from fastapi import APIRouter, Body, HTTPException
+from system.core.errors import AppError
 
 from system.services.servico_ingestao_service import (
     processar_ingestao_json,
@@ -36,8 +36,13 @@ def receber_produtos_json(payload: dict = Body(...)) -> dict:
     :param dict payload: Payload JSON enviado pelo ERP
     :return: Quantidade e lista de produtos normalizados
     """
-
-    return processar_ingestao_json(payload)
+    try:
+        return processar_ingestao_json(payload)
+    except AppError as erro:
+        raise HTTPException(
+            status_code=erro.status_code,
+            detail=erro.mensagem,
+        ) from erro
 
 
 @router.post("/xml")
@@ -65,8 +70,13 @@ def receber_produtos_xml(payload_xml: str = Body(..., media_type="application/xm
     :param str payload_xml: Payload XML enviado pelo ERP
     :return: Quantidade e lista de produtos normalizados
     """
-
-    return processar_ingestao_xml(payload_xml)
+    try:
+        return processar_ingestao_xml(payload_xml)
+    except AppError as erro:
+        raise HTTPException(
+            status_code=erro.status_code,
+            detail=erro.mensagem,
+        ) from erro
 
 
 @router.post("/txt")
@@ -89,5 +99,10 @@ def receber_produtos_txt(payload_txt: str = Body(..., media_type="text/plain")) 
     :param str payload_txt: Payload TXT enviado pelo ERP
     :return: Quantidade e lista de produtos normalizados
     """
-
-    return processar_ingestao_txt(payload_txt)
+    try:
+        return processar_ingestao_txt(payload_txt)
+    except AppError as erro:
+        raise HTTPException(
+            status_code=erro.status_code,
+            detail=erro.mensagem,
+        ) from erro
