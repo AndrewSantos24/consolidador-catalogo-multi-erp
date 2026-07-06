@@ -7,7 +7,7 @@ async function criarTabelaProdutos() {
   /**
    * Cria a tabela de produtos caso ela ainda não exista.
    */
-  await executarConsulta(sql);
+  await executarConsulta(queryCriarTabelaProdutos);
 }
 
 async function inicializarBanco() {
