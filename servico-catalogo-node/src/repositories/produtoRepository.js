@@ -6,6 +6,7 @@ const {
   queryListarProdutos,
   queryBuscarProdutoCompletoPorId,
   queryAtualizarImagemProduto,
+  queryListarProdutosSemImagem,
 } = require("../database/queries/produtoQueries");
 
 async function buscarProdutoPorId(id) {
@@ -117,6 +118,18 @@ async function atualizarImagemProduto(id, imagemUrl) {
   return resultado.rows[0];
 }
 
+async function listarProdutosSemImagem() {
+  /**
+   * Lista produtos que ainda não possuem imagem vinculada.
+   *
+   * @returns {Promise<Array>} Lista de produtos sem imagem
+   */
+
+  const resultado = await executarConsulta(queryListarProdutosSemImagem);
+
+  return resultado.rows;
+}
+
 module.exports = {
   buscarProdutoPorId,
   inserirProduto,
@@ -124,4 +137,5 @@ module.exports = {
   listarProdutos,
   buscarProdutoCompletoPorId,
   atualizarImagemProduto,
+  listarProdutosSemImagem
 };
