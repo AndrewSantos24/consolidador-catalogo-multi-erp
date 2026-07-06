@@ -21,24 +21,28 @@ async function iniciarConsumerProdutos() {
     console.log(`Escutando fila: ${env.rabbitmqFilaProdutos}`);
 
     canal.consume(env.rabbitmqFilaProdutos, async (mensagem) => {
-      if (!mensagem) {
-        return;
+        if (!mensagem) {
+          return;
+        }
+
+        try {
+          const conteudo = mensagem.content.toString("utf-8");
+          const produto = JSON.parse(conteudo);
+
+          console.log("Produto recebido da fila:");
+          console.log(produto);
+
+          canal.ack(mensagem);
+        } catch (erro) {
+          console.error("Erro ao processar mensagem da fila:", erro.message);
+
+          canal.nack(mensagem, false, false);
+        }
+      },
+      {
+        consumerTag: "servico-catalogo-node-produtos",
       }
-
-      try {
-        const conteudo = mensagem.content.toString("utf-8");
-        const produto = JSON.parse(conteudo);
-
-        console.log("Produto recebido da fila:");
-        console.log(produto);
-
-        canal.ack(mensagem);
-      } catch (erro) {
-        console.error("Erro ao processar mensagem da fila:", erro.message);
-
-        canal.nack(mensagem, false, false);
-      }
-    });
+    );
   } catch (erro) {
     console.error("Erro ao conectar no RabbitMQ:", erro.message);
   }
