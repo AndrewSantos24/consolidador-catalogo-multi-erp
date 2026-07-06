@@ -3,6 +3,7 @@ const express = require("express");
 const env = require("./config/env");
 const healthRoutes = require("./routes/healthRoutes");
 const bancoRoutes = require("./routes/bancoRoutes");
+const { iniciarConsumerProdutos } = require("./consumers/produtoConsumer");
 
 const app = express();
 
@@ -13,4 +14,5 @@ app.use("/api/v1", bancoRoutes);
 
 app.listen(env.porta, () => {
   console.log(`${env.nomeServico} rodando na porta ${env.porta}`);
+  iniciarConsumerProdutos();
 });
