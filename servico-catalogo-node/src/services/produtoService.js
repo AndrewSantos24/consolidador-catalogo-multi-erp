@@ -4,6 +4,7 @@ const {
   inserirProduto,
   listarProdutos,
   buscarProdutoCompletoPorId,
+  atualizarImagemProduto,
 } = require("../repositories/produtoRepository");
 
 function produtoRecebidoEhMaisNovo(produtoRecebido, produtoSalvo) {
@@ -80,8 +81,31 @@ async function consultarProdutoPorId(id) {
   return buscarProdutoCompletoPorId(id);
 }
 
+async function vincularImagemProduto(id, imagemUrl) {
+  /**
+   * Vincula uma URL de imagem a um produto.
+   *
+   * @param {string} id - ID do produto
+   * @param {string} imagemUrl - URL da imagem
+   * @returns {Promise<object>} Produto atualizado
+   */
+
+  if (!id || !imagemUrl) {
+    throw new Error("ID do produto e URL da imagem são obrigatórios.");
+  }
+
+  const produtoAtualizado = await atualizarImagemProduto(id, imagemUrl);
+
+  if (!produtoAtualizado) {
+    throw new Error("Produto não encontrado.");
+  }
+
+  return produtoAtualizado;
+}
+
 module.exports = {
   salvarOuAtualizarProduto,
   consultarProdutos,
   consultarProdutoPorId,
+  vincularImagemProduto,
 };
