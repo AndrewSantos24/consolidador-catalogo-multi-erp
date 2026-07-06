@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Body, HTTPException
+from sqlalchemy.orm import Session
+from fastapi import APIRouter, Body, Depends, HTTPException
 from system.core.errors import AppError
 
 from system.services.servico_ingestao_service import (
@@ -6,13 +7,14 @@ from system.services.servico_ingestao_service import (
     processar_ingestao_txt,
     processar_ingestao_xml,
 )
+from system.database.connection import obter_sessao
 
 
 router = APIRouter(prefix="/ingestao", tags=["Ingestão"])
 
 
 @router.post("/json")
-def receber_produtos_json(payload: dict = Body(...)) -> dict:
+def receber_produtos_json(payload: dict = Body(...),sessao: Session = Depends(obter_sessao)) -> dict:
     """Recebe produtos em JSON e retorna os produtos normalizados.
 
     Exemplo de payload recebido:
@@ -34,10 +36,11 @@ def receber_produtos_json(payload: dict = Body(...)) -> dict:
     }
 
     :param dict payload: Payload JSON enviado pelo ERP
+    :param Session sessao: Sessão ativa do banco de dados
     :return: Quantidade e lista de produtos normalizados
     """
     try:
-        return processar_ingestao_json(payload)
+        return processar_ingestao_json(payload,sessao)
     except AppError as erro:
         raise HTTPException(
             status_code=erro.status_code,
@@ -46,7 +49,7 @@ def receber_produtos_json(payload: dict = Body(...)) -> dict:
 
 
 @router.post("/xml")
-def receber_produtos_xml(payload_xml: str = Body(..., media_type="application/xml")) -> dict:
+def receber_produtos_xml(payload_xml: str = Body(..., media_type="application/xml"),sessao: Session = Depends(obter_sessao)) -> dict:
     """Recebe produtos em XML e retorna os produtos normalizados.
 
     Exemplo de payload recebido:
@@ -68,10 +71,11 @@ def receber_produtos_xml(payload_xml: str = Body(..., media_type="application/xm
     
 
     :param str payload_xml: Payload XML enviado pelo ERP
+    :param Session sessao: Sessão ativa do banco de dados
     :return: Quantidade e lista de produtos normalizados
     """
     try:
-        return processar_ingestao_xml(payload_xml)
+        return processar_ingestao_xml(payload_xml,sessao)
     except AppError as erro:
         raise HTTPException(
             status_code=erro.status_code,
@@ -80,7 +84,7 @@ def receber_produtos_xml(payload_xml: str = Body(..., media_type="application/xm
 
 
 @router.post("/txt")
-def receber_produtos_txt(payload_txt: str = Body(..., media_type="text/plain")) -> dict:
+def receber_produtos_txt(payload_txt: str = Body(..., media_type="text/plain"),sessao: Session = Depends(obter_sessao)) -> dict:
     """Recebe produtos em TXT e retorna os produtos normalizados.
 
     Exemplo de payload recebido:
@@ -97,10 +101,11 @@ def receber_produtos_txt(payload_txt: str = Body(..., media_type="text/plain")) 
     - data final no formato YYYYMMDDHHMMSS
 
     :param str payload_txt: Payload TXT enviado pelo ERP
+    :param Session sessao: Sessão ativa do banco de dados
     :return: Quantidade e lista de produtos normalizados
     """
     try:
-        return processar_ingestao_txt(payload_txt)
+        return processar_ingestao_txt(payload_txt,sessao)
     except AppError as erro:
         raise HTTPException(
             status_code=erro.status_code,
