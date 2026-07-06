@@ -2,6 +2,8 @@ const {
   atualizarProduto,
   buscarProdutoPorId,
   inserirProduto,
+  listarProdutos,
+  buscarProdutoCompletoPorId,
 } = require("../repositories/produtoRepository");
 
 function produtoRecebidoEhMaisNovo(produtoRecebido, produtoSalvo) {
@@ -56,6 +58,30 @@ async function salvarOuAtualizarProduto(produto) {
   };
 }
 
+async function consultarProdutos(filtros = {}) {
+  /**
+   * Consulta produtos cadastrados no catálogo.
+   *
+   * @param {object} filtros - Filtros opcionais da consulta
+   * @returns {Promise<Array>} Lista de produtos
+   */
+
+  return listarProdutos(filtros);
+}
+
+async function consultarProdutoPorId(id) {
+  /**
+   * Consulta um produto pelo ID.
+   *
+   * @param {string} id - ID do produto
+   * @returns {Promise<object|null>} Produto encontrado ou null
+   */
+
+  return buscarProdutoCompletoPorId(id);
+}
+
 module.exports = {
   salvarOuAtualizarProduto,
+  consultarProdutos,
+  consultarProdutoPorId,
 };
