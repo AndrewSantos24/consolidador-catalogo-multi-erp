@@ -1,7 +1,10 @@
 const express = require("express");
 const path = require("path");
 
-const { vincularImagemProduto } = require("../services/produtoService");
+const {
+  consultarProdutosSemImagem,
+  vincularImagemProduto,
+} = require("../services/produtoService");
 
 const router = express.Router();
 
@@ -18,6 +21,89 @@ router.get("/painel-midias", (req, res) => {
   );
 
   return res.sendFile(caminhoTemplate);
+});
+
+router.get("/painel-midias/produtos-sem-imagem", async (req, res) => {
+  /**
+   * Exibe produtos que ainda não possuem imagem vinculada.
+   */
+
+  try {
+    const produtos = await consultarProdutosSemImagem();
+
+    let conteudoProdutos = "<p>Nenhum produto sem imagem encontrado.</p>";
+
+    if (produtos.length > 0) {
+      const linhasTabela = produtos
+        .map((produto) => {
+          return `
+            <tr>
+              <td>${produto.id}</td>
+              <td>${produto.sku}</td>
+              <td>${produto.nome}</td>
+              <td>${produto.categoria}</td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      conteudoProdutos = `
+        <table border="1" cellpadding="8" cellspacing="0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>SKU</th>
+              <th>Nome</th>
+              <th>Categoria</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${linhasTabela}
+          </tbody>
+        </table>
+      `;
+    }
+
+    return res.send(`
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8" />
+          <title>Produtos sem imagem</title>
+        </head>
+        <body>
+          <h1>Produtos sem imagem</h1>
+
+          <p>Copie o ID do produto e use no painel de mídias para vincular uma imagem.</p>
+
+          ${conteudoProdutos}
+
+          <br />
+
+          <a href="/api/v1/painel-midias">Voltar para o painel</a>
+        </body>
+      </html>
+    `);
+  } catch (erro) {
+    return res.status(500).send(`
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8" />
+          <title>Erro</title>
+        </head>
+        <body>
+          <h1>Erro ao consultar produtos sem imagem</h1>
+
+          <p>${erro.message}</p>
+
+          <br />
+
+          <a href="/api/v1/painel-midias">Voltar para o painel</a>
+        </body>
+      </html>
+    `);
+  }
 });
 
 router.post("/painel-midias", async (req, res) => {

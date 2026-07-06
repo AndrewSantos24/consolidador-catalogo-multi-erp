@@ -87,6 +87,18 @@ const queryAtualizarImagemProduto = `
     criado_em;
 `;
 
+const queryListarProdutosSemImagem = `
+  SELECT
+    id,
+    sku,
+    nome,
+    categoria,
+    imagem_url
+  FROM produtos
+  WHERE imagem_url IS NULL OR imagem_url = ''
+  ORDER BY nome ASC;
+`;
+
 module.exports = {
   queryBuscarProdutoPorId,
   queryInserirProduto,
@@ -94,4 +106,5 @@ module.exports = {
   queryListarProdutos,
   queryBuscarProdutoCompletoPorId,
   queryAtualizarImagemProduto,
+  queryListarProdutosSemImagem
 };
