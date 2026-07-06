@@ -5,6 +5,7 @@ const {
   listarProdutos,
   buscarProdutoCompletoPorId,
   atualizarImagemProduto,
+  listarProdutosSemImagem,
 } = require("../repositories/produtoRepository");
 
 function produtoRecebidoEhMaisNovo(produtoRecebido, produtoSalvo) {
@@ -103,9 +104,20 @@ async function vincularImagemProduto(id, imagemUrl) {
   return produtoAtualizado;
 }
 
+async function consultarProdutosSemImagem() {
+  /**
+   * Consulta produtos que ainda não possuem imagem vinculada.
+   *
+   * @returns {Promise<Array>} Lista de produtos sem imagem
+   */
+
+  return listarProdutosSemImagem();
+}
+
 module.exports = {
   salvarOuAtualizarProduto,
   consultarProdutos,
   consultarProdutoPorId,
   vincularImagemProduto,
+  consultarProdutosSemImagem,
 };
