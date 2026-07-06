@@ -2,6 +2,8 @@ const amqp = require("amqplib");
 
 const env = require("../config/env");
 
+const { salvarOuAtualizarProduto } = require("../services/produtoService");
+
 async function iniciarConsumerProdutos() {
   /**
    * Inicia o consumer de produtos normalizados no RabbitMQ.
@@ -29,8 +31,10 @@ async function iniciarConsumerProdutos() {
           const conteudo = mensagem.content.toString("utf-8");
           const produto = JSON.parse(conteudo);
 
-          console.log("Produto recebido da fila:");
-          console.log(produto);
+          const resultado = await salvarOuAtualizarProduto(produto);
+
+          console.log("Produto processado:");
+          console.log(resultado);
 
           canal.ack(mensagem);
         } catch (erro) {

@@ -1,0 +1,61 @@
+const {
+  atualizarProduto,
+  buscarProdutoPorId,
+  inserirProduto,
+} = require("../repositories/produtoRepository");
+
+function produtoRecebidoEhMaisNovo(produtoRecebido, produtoSalvo) {
+  /**
+   * Verifica se o produto recebido é mais novo que o produto salvo.
+   *
+   * @param {object} produtoRecebido - Produto recebido da fila
+   * @param {object} produtoSalvo - Produto salvo no banco
+   * @returns {boolean} True quando o produto recebido for mais novo
+   */
+
+  const dataRecebida = new Date(produtoRecebido.atualizado_em);
+  const dataSalva = new Date(produtoSalvo.atualizado_em);
+
+  return dataRecebida > dataSalva;
+}
+
+async function salvarOuAtualizarProduto(produto) {
+  /**
+   * Salva ou atualiza um produto respeitando a regra de atualizado_em.
+   *
+   * @param {object} produto - Produto normalizado recebido da fila
+   * @returns {Promise<object>} Resultado do processamento
+   */
+
+  const produtoSalvo = await buscarProdutoPorId(produto.id);
+
+  if (!produtoSalvo) {
+    await inserirProduto(produto);
+
+    return {
+      acao: "CRIADO",
+      mensagem: "Produto criado com sucesso.",
+      produto_id: produto.id,
+    };
+  }
+
+  if (produtoRecebidoEhMaisNovo(produto, produtoSalvo)) {
+    await atualizarProduto(produto);
+
+    return {
+      acao: "ATUALIZADO",
+      mensagem: "Produto atualizado com sucesso.",
+      produto_id: produto.id,
+    };
+  }
+
+  return {
+    acao: "IGNORADO",
+    mensagem: "Produto ignorado porque a atualização recebida não é mais recente.",
+    produto_id: produto.id,
+  };
+}
+
+module.exports = {
+  salvarOuAtualizarProduto,
+};
