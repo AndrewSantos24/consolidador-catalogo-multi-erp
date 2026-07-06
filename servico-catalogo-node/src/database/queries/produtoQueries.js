@@ -71,10 +71,27 @@ const queryBuscarProdutoCompletoPorId = `
   WHERE id = $1;
 `;
 
+const queryAtualizarImagemProduto = `
+  UPDATE produtos
+  SET imagem_url = $2
+  WHERE id = $1
+  RETURNING
+    id,
+    sku,
+    nome,
+    preco_lista,
+    preco_desconto,
+    categoria,
+    imagem_url,
+    atualizado_em,
+    criado_em;
+`;
+
 module.exports = {
   queryBuscarProdutoPorId,
   queryInserirProduto,
   queryAtualizarProduto,
   queryListarProdutos,
   queryBuscarProdutoCompletoPorId,
+  queryAtualizarImagemProduto,
 };
