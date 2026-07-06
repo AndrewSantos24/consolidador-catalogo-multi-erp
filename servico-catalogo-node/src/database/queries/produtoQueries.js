@@ -38,8 +38,43 @@ const queryAtualizarProduto = `
   WHERE id = $1;
 `;
 
+const queryListarProdutos = `
+  SELECT
+    id,
+    sku,
+    nome,
+    preco_lista,
+    preco_desconto,
+    categoria,
+    imagem_url,
+    atualizado_em,
+    criado_em
+  FROM produtos
+  WHERE
+    ($1::TEXT IS NULL OR sku = $1)
+    AND ($2::TEXT IS NULL OR categoria = $2)
+  ORDER BY nome ASC;
+`;
+
+const queryBuscarProdutoCompletoPorId = `
+  SELECT
+    id,
+    sku,
+    nome,
+    preco_lista,
+    preco_desconto,
+    categoria,
+    imagem_url,
+    atualizado_em,
+    criado_em
+  FROM produtos
+  WHERE id = $1;
+`;
+
 module.exports = {
   queryBuscarProdutoPorId,
   queryInserirProduto,
   queryAtualizarProduto,
+  queryListarProdutos,
+  queryBuscarProdutoCompletoPorId,
 };
