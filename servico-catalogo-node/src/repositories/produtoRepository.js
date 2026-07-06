@@ -3,6 +3,8 @@ const {
   queryBuscarProdutoPorId,
   queryInserirProduto,
   queryAtualizarProduto,
+  queryListarProdutos,
+  queryBuscarProdutoCompletoPorId,
 } = require("../database/queries/produtoQueries");
 
 async function buscarProdutoPorId(id) {
@@ -60,8 +62,43 @@ async function atualizarProduto(produto) {
   ]);
 }
 
+async function listarProdutos(filtros = {}) {
+  /**
+   * Lista produtos cadastrados no banco de dados.
+   *
+   * @param {object} filtros - Filtros opcionais da consulta
+   * @returns {Promise<Array>} Lista de produtos encontrados
+   */
+
+  const sku = filtros.sku || null;
+  const categoria = filtros.categoria || null;
+
+  const resultado = await executarConsulta(queryListarProdutos, [sku, categoria]);
+
+  return resultado.rows;
+}
+
+async function buscarProdutoCompletoPorId(id) {
+  /**
+   * Busca um produto completo pelo ID.
+   *
+   * @param {string} id - ID do produto
+   * @returns {Promise<object|null>} Produto encontrado ou null
+   */
+
+  const resultado = await executarConsulta(queryBuscarProdutoCompletoPorId, [id]);
+
+  if (resultado.rows.length === 0) {
+    return null;
+  }
+
+  return resultado.rows[0];
+}
+
 module.exports = {
   buscarProdutoPorId,
   inserirProduto,
   atualizarProduto,
+  listarProdutos,
+  buscarProdutoCompletoPorId,
 };
