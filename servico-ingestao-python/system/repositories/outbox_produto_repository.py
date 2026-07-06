@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
 from system.models.outbox_produto_model import OutboxProduto
@@ -51,3 +53,45 @@ def listar_outbox_produtos_pendentes(
         .limit(limite)
         .all()
     )
+
+def marcar_outbox_produto_como_publicado(
+    sessao: Session,
+    registro: OutboxProduto,
+) -> OutboxProduto:
+    """Marca uma mensagem do outbox como publicada.
+
+    :param Session sessao: Sessão ativa do banco de dados
+    :param OutboxProduto registro: Registro do outbox que foi publicado
+    :return: Registro atualizado
+    """
+
+    registro.status = "PUBLICADO"
+    registro.erro = None
+    registro.publicado_em = datetime.utcnow()
+
+    sessao.commit()
+    sessao.refresh(registro)
+
+    return registro
+
+def marcar_outbox_produto_como_erro(
+    sessao: Session,
+    registro: OutboxProduto,
+    erro: str,
+) -> OutboxProduto:
+    """Marca uma mensagem do outbox com erro de reprocessamento.
+
+    :param Session sessao: Sessão ativa do banco de dados
+    :param OutboxProduto registro: Registro do outbox que falhou
+    :param str erro: Mensagem de erro do reprocessamento
+    :return: Registro atualizado
+    """
+
+    registro.status = "PENDENTE"
+    registro.tentativas += 1
+    registro.erro = erro
+
+    sessao.commit()
+    sessao.refresh(registro)
+
+    return registro
