@@ -17,7 +17,7 @@ router.get("/painel-midias", (req, res) => {
     __dirname,
     "..",
     "templates",
-    "painelMidias.html"
+    "painelmidias.html"
   );
 
   return res.sendFile(caminhoTemplate);
