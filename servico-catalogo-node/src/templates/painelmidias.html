@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Painel de Mídias</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Corpo da página */
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        min-height: 100vh;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        padding: 20px;
+      }
+
+      /* Card central do formulário */
+      .container {
+        width: 100%;
+        max-width: 480px;
+        background: #ffffff;
+        padding: 32px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      }
+
+      /* Título */
+      h1 {
+        font-size: 28px;
+        color: #1f2937;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      /* Texto explicativo */
+      p {
+        color: #6b7280;
+        font-size: 15px;
+        text-align: center;
+        margin-bottom: 28px;
+      }
+
+      /* Espaçamento dos campos */
+      .campo {
+        margin-bottom: 20px;
+      }
+
+      /* Label */
+      label {
+        display: block;
+        font-weight: bold;
+        color: #374151;
+        margin-bottom: 8px;
+      }
+
+      /* Inputs */
+      input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+
+      /* Quando clicar no input */
+      input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      }
+
+      /* Botão */
+      button {
+        width: 100%;
+        padding: 13px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+      }
+
+      /* Efeito ao passar o mouse */
+      button:hover {
+        background: #1d4ed8;
+      }
+
+      /* Efeito ao clicar */
+      button:active {
+        transform: scale(0.98);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Painel De Mídia</h1>
+
+      <p>Informe o ID do produto e a URL da imagem que deseja vincular ao Produto.</p>
+
+      <p>
+        <a href="/api/v1/painel-midias/produtos-sem-imagem">
+          Ver produtos sem imagem
+        </a>
+      </p>
+
+      <form method="POST" action="/api/v1/painel-midias">
+        <div class="campo">
+          <label for="produto_id">ID do Produto</label>
+          <input
+            type="text"
+            id="produto_id"
+            name="produto_id"
+            placeholder="Ex: 12345"
+            required
+          />
+        </div>
+
+        <div class="campo">
+          <label for="imagem_url">URL da Imagem</label>
+          <input
+            type="text"
+            id="imagem_url"
+            name="imagem_url"
+            placeholder="https://exemplo.com/imagem.jpg"
+            required
+          />
+        </div>
+
+        <button type="submit">Vincular Imagem</button>
+      </form>
+    </div>
+  </body>
+</html>

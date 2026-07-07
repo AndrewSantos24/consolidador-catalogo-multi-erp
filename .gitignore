@@ -1,0 +1,113 @@
+# =========================
+# Python / uv
+# =========================
+
+# Ambiente virtual
+.venv/
+venv/
+env/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Cache de ferramentas
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build / empacotamento
+build/
+dist/
+*.egg-info/
+
+# Arquivo de lock do pip, caso exista
+Pipfile.lock
+
+# =========================
+# uv
+# =========================
+
+# O uv.lock geralmente DEVE ser versionado em aplicações
+# Então não ignore o uv.lock, a menos que você tenha um motivo específico.
+# uv.lock
+
+# =========================
+# FastAPI / Projeto
+# =========================
+
+# Variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+
+# Banco local
+*.sqlite3
+*.db
+
+# Uploads / arquivos gerados localmente
+uploads/
+media/
+staticfiles/
+
+# =========================
+# Node.js
+# =========================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Builds frontend
+.next/
+.nuxt/
+dist/
+build/
+coverage/
+
+# Arquivos de lock
+# Em projetos Node, normalmente você versiona o lock usado:
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# =========================
+# IDE / Editor
+# =========================
+
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# =========================
+# Docker / Infra local
+# =========================
+
+.docker/
+docker-compose.override.yml
+
+# =========================
+# Testes / temporários
+# =========================
+
+tmp/
+temp/
+.cache/
