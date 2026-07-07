@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 
+from system.constants.campos_erp_xml import CamposErpXml
 from system.schemas.produto_schema import ProdutoNormalizado
 
 
@@ -11,13 +12,13 @@ def converter_item_xml_para_produto(elemento: ET.Element) -> ProdutoNormalizado:
     """
 
     return ProdutoNormalizado(
-        id=str(elemento.findtext("id", "")).strip(),
-        sku=str(elemento.findtext("sku", "")).strip(),
-        nome=str(elemento.findtext("name", "")).strip(),
-        preco_lista=float(elemento.findtext("price/list", "0")),
-        preco_desconto=float(elemento.findtext("price/discount", "0")),
-        categoria=str(elemento.findtext("category", "")).strip(),
-        atualizado_em=str(elemento.findtext("lastUpdate", "")).strip(),
+        id=str(elemento.findtext(CamposErpXml.ID, "")).strip(),
+        sku=str(elemento.findtext(CamposErpXml.SKU, "")).strip(),
+        nome=str(elemento.findtext(CamposErpXml.NOME, "")).strip(),
+        preco_lista=float(elemento.findtext(CamposErpXml.PRECO_LISTA, "0")),
+        preco_desconto=float(elemento.findtext(CamposErpXml.PRECO_DESCONTO, "0")),
+        categoria=str(elemento.findtext(CamposErpXml.CATEGORIA, "")).strip(),
+        atualizado_em=str(elemento.findtext(CamposErpXml.ATUALIZADO_EM, "")).strip(),
     )
 
 
@@ -29,7 +30,7 @@ def normalizar_produtos_xml(payload_xml: str) -> list[ProdutoNormalizado]:
     """
 
     raiz = ET.fromstring(payload_xml)
-    produtos = raiz.findall("product")
+    produtos = raiz.findall(CamposErpXml.PRODUTO)
 
     return [
         converter_item_xml_para_produto(produto)

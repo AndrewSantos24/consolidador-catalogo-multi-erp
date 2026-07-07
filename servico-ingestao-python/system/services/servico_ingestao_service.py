@@ -2,7 +2,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from system.core.config import configuracoes
-from system.core.errors import RabbitMQError
+from system.core.errors import AppError, RabbitMQError
 from system.schemas.produto_schema import ProdutoNormalizado
 from system.services.outbox_produto_service import salvar_produtos_pendentes_no_outbox
 from system.services.parser_json_service import normalizar_produtos_json
@@ -113,7 +113,14 @@ def processar_ingestao_json(payload: dict, sessao: Session) -> dict:
     :return: Resposta padrão com produtos processados
     """
 
-    produtos = normalizar_produtos_json(payload)
+    try:
+        produtos = normalizar_produtos_json(payload)
+
+    except Exception as erro:
+        raise AppError(
+            mensagem=f"Payload JSON inválido: {erro}",
+            status_code=400,
+        ) from erro
 
     return processar_produtos_normalizados(
         sessao=sessao,
@@ -130,7 +137,14 @@ def processar_ingestao_xml(payload_xml: str, sessao: Session) -> dict:
     :return: Resposta padrão com produtos processados
     """
 
-    produtos = normalizar_produtos_xml(payload_xml)
+    try:
+        produtos = normalizar_produtos_xml(payload_xml)
+
+    except Exception as erro:
+        raise AppError(
+            mensagem=f"Payload XML inválido: {erro}",
+            status_code=400,
+        ) from erro
 
     return processar_produtos_normalizados(
         sessao=sessao,
@@ -147,7 +161,14 @@ def processar_ingestao_txt(payload_txt: str, sessao: Session) -> dict:
     :return: Resposta padrão com produtos processados
     """
 
-    produtos = normalizar_produtos_txt(payload_txt)
+    try:
+        produtos = normalizar_produtos_txt(payload_txt)
+
+    except Exception as erro:
+        raise AppError(
+            mensagem=f"Payload TXT inválido: {erro}",
+            status_code=400,
+        ) from erro
 
     return processar_produtos_normalizados(
         sessao=sessao,
