@@ -22,6 +22,42 @@ services:
       POSTGRES_PASSWORD: catalogo
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  servico-ingestao-python:
+    build:
+      context: ./servico-ingestao-python
+    container_name: servico_ingestao_python
+    ports:
+      - "8000:8000"
+    environment:
+      NOME_APLICACAO: Serviço de Ingestão - Catálogo Multi-ERP
+      AMBIENTE: desenvolvimento
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORTA: 5672
+      RABBITMQ_USUARIO: catalogo
+      RABBITMQ_SENHA: catalogo
+      RABBITMQ_FILA_PRODUTOS: catalogo.produtos.normalizados
+      DATABASE_URL: postgresql+psycopg://catalogo:catalogo@postgres:5432/catalogo_db
+    depends_on:
+      - rabbitmq
+      - postgres
+
+  servico-catalogo-node:
+    build:
+      context: ./servico-catalogo-node
+    container_name: servico_catalogo_node
+    ports:
+      - "3000:3000"
+    environment:
+      PORTA: 3000
+      NOME_SERVICO: Serviço de Catálogo - Multi-ERP
+      AMBIENTE: desenvolvimento
+      DATABASE_URL: postgresql://catalogo:catalogo@postgres:5432/catalogo_db
+      RABBITMQ_URL: amqp://catalogo:catalogo@rabbitmq:5672
+      RABBITMQ_FILA_PRODUTOS: catalogo.produtos.normalizados
+      RABBITMQ_CONSUMER_TAG: servico-catalogo-node-produtos
+    depends_on:
+      - rabbitmq
+      - postgres
 
 volumes:
   rabbitmq_data:
