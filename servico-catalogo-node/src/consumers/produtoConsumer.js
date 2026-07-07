@@ -44,7 +44,7 @@ async function iniciarConsumerProdutos() {
         }
       },
       {
-        consumerTag: "servico-catalogo-node-produtos",
+        consumerTag: env.rabbitmqConsumerTag,
       }
     );
   } catch (erro) {
