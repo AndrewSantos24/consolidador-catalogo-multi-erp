@@ -1,3 +1,4 @@
+from system.constants.campos_erp_json import CamposErpJson
 from system.schemas.produto_schema import ProdutoNormalizado
 
 
@@ -9,13 +10,13 @@ def converter_item_json_para_produto(item: dict) -> ProdutoNormalizado:
     """
 
     return ProdutoNormalizado(
-        id=str(item["productCode"]).strip(),
-        sku=str(item["skuCode"]).strip(),
-        nome=str(item["description"]).strip(),
-        preco_lista=float(item["value"]),
-        preco_desconto=float(item["discountValue"]),
-        categoria=str(item["department"]).strip(),
-        atualizado_em=item["updated_at"],
+        id=str(item[CamposErpJson.CODIGO_PRODUTO]).strip(),
+        sku=str(item[CamposErpJson.SKU]).strip(),
+        nome=str(item[CamposErpJson.DESCRICAO]).strip(),
+        preco_lista=float(item[CamposErpJson.PRECO_LISTA]),
+        preco_desconto=float(item[CamposErpJson.PRECO_DESCONTO]),
+        categoria=str(item[CamposErpJson.DEPARTAMENTO]).strip(),
+        atualizado_em=item[CamposErpJson.ATUALIZADO_EM],
     )
 
 
@@ -26,7 +27,7 @@ def normalizar_produtos_json(payload: dict) -> list[ProdutoNormalizado]:
     :return: Lista de produtos normalizados
     """
 
-    produtos = payload.get("items", [])
+    produtos = payload.get(CamposErpJson.ITENS, [])
 
     return [
         converter_item_json_para_produto(item)
